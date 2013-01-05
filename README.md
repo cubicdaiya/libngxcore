@@ -11,7 +11,7 @@ This way is a pain when we try as quick. libngxcore simplify to try nginx core A
 
 For example, Let's try the nginx string API with libngxcore.
 
-```string.c
+```c
 #include <stdio.h>
 
 #include <nginx.h>
@@ -33,11 +33,11 @@ Use examples as a reference about Building.
 ## Build libngxcore.a
 
 ```
-scons
+$ scons
 ```
 
 ## Build examples
 
 ```
-cd examples && scons
+$ cd examples && scons
 ```
