@@ -4,7 +4,7 @@ libngxcore is the library builded from nginx core APIs.
 
 ## Why is libngxcore needed?
 
-nginx has a powerful core APIs. but they is not used outside nginx.
+nginx has powerful core APIs. but they are not able to used outside nginx.
 If we write a nginx module, we must build a nginx module with nginx.
 This way is a pain when we try as quick. libngxcore simplify to try nginx core APIs.
 
