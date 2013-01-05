@@ -1,3 +1,7 @@
 examples/string
 examples/regex
 *.a
+GTAGS
+GRTAGS
+GSYMS
+GPATH
