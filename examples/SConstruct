@@ -16,7 +16,8 @@ env = Environment(
 
 targets = {
     "string" : ["string.c", '../libngxcore.a'],
-    "regex" : ["regex.c", '../libngxcore.a'],
+    "regex"  : ["regex.c",  '../libngxcore.a'],
+    "pool"   : ["pool.c",   '../libngxcore.a'],
     }
 
 [ env.Program(target, targets[target]) for target in targets ]
