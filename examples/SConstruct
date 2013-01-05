@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+
+env = Environment(
+    CPPPATH=['../src/core',
+             '../src/auto',
+             '../src/os/unix',
+    ],
+    LIBS=[
+          'pthread',
+          'crypt',
+          'pcre',
+          'crypto',
+          'z',
+    ],
+)
+
+targets = {
+    "string" : ["string.c", '../libngxcore.a'],
+    "regex" : ["regex.c", '../libngxcore.a'],
+    }
+
+[ env.Program(target, targets[target]) for target in targets ]
+
