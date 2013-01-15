@@ -77,7 +77,7 @@ target = 'ngxcore'
 env = Environment(
     CFLAGS=[
         '-g',
-        '-O2',
+        #'-O2',
         '-Wall',
     ],
     CPPPATH=[

@@ -5,6 +5,10 @@ env = Environment(
              '../src/auto',
              '../src/os/unix',
     ],
+    CFLAGS=['-g',
+            '-Wall',
+            #'-O2',
+    ],
     LIBS=[
           'pthread',
           'crypt',
@@ -18,6 +22,7 @@ targets = {
     "string" : ["string.c", '../libngxcore.a'],
     "regex"  : ["regex.c",  '../libngxcore.a'],
     "pool"   : ["pool.c",   '../libngxcore.a'],
+    "temp"   : ["temp.c",   '../libngxcore.a'],
     }
 
 [ env.Program(target, targets[target]) for target in targets ]

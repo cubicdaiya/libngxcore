@@ -1,6 +1,7 @@
 examples/string
 examples/regex
 examples/pool
+examples/temp
 *.a
 GTAGS
 GRTAGS
