@@ -1,7 +1,7 @@
-#define NGX_CONFIGURE " --with-pcre --with-openssl=../openssl-1.0.1c"
+#define NGX_CONFIGURE " --with-pcre"
 
 #ifndef NGX_COMPILER
-#define NGX_COMPILER  "gcc 4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5) "
+#define NGX_COMPILER  "gcc 4.7.2 (Ubuntu/Linaro 4.7.2-2ubuntu1) "
 #endif
 
 
@@ -293,6 +293,11 @@
 #endif
 
 
+#ifndef NGX_HAVE_PCRE_JIT
+#define NGX_HAVE_PCRE_JIT  1
+#endif
+
+
 #ifndef NGX_OPENSSL_MD5
 #define NGX_OPENSSL_MD5  1
 #endif
@@ -315,6 +320,11 @@
 
 #ifndef NGX_HAVE_OPENSSL_SHA1_H
 #define NGX_HAVE_OPENSSL_SHA1_H  1
+#endif
+
+
+#ifndef NGX_ZLIB
+#define NGX_ZLIB  1
 #endif
 
 
