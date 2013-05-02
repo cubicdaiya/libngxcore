@@ -1,7 +1,7 @@
-#define NGX_CONFIGURE " --with-pcre"
+#define NGX_CONFIGURE " --with-pcre --with-http_spdy_module --with-openssl=../openssl-1.0.1e"
 
 #ifndef NGX_COMPILER
-#define NGX_COMPILER  "gcc 4.7.2 (Ubuntu/Linaro 4.7.2-2ubuntu1) "
+#define NGX_COMPILER  "gcc 4.4.5 (Debian 4.4.5-8) "
 #endif
 
 
@@ -179,7 +179,7 @@
 
 
 #ifndef NGX_SYS_NERR
-#define NGX_SYS_NERR  135
+#define NGX_SYS_NERR  132
 #endif
 
 
@@ -248,6 +248,11 @@
 #endif
 
 
+#ifndef NGX_HAVE_GETADDRINFO
+#define NGX_HAVE_GETADDRINFO  1
+#endif
+
+
 #ifndef NGX_HTTP_CACHE
 #define NGX_HTTP_CACHE  1
 #endif
@@ -263,23 +268,18 @@
 #endif
 
 
+#ifndef NGX_HTTP_SPDY
+#define NGX_HTTP_SPDY  1
+#endif
+
+
 #ifndef NGX_CRYPT
 #define NGX_CRYPT  1
 #endif
 
 
-#ifndef NGX_HTTP_GEO
-#define NGX_HTTP_GEO  1
-#endif
-
-
 #ifndef NGX_HTTP_X_FORWARDED_FOR
 #define NGX_HTTP_X_FORWARDED_FOR  1
-#endif
-
-
-#ifndef NGX_HTTP_PROXY
-#define NGX_HTTP_PROXY  1
 #endif
 
 
@@ -290,11 +290,6 @@
 
 #ifndef NGX_PCRE
 #define NGX_PCRE  1
-#endif
-
-
-#ifndef NGX_HAVE_PCRE_JIT
-#define NGX_HAVE_PCRE_JIT  1
 #endif
 
 
