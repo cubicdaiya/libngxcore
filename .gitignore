@@ -2,6 +2,8 @@ examples/string
 examples/regex
 examples/pool
 examples/temp
+examples/version
+examples/parse
 *.a
 GTAGS
 GRTAGS
