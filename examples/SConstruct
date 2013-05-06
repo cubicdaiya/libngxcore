@@ -25,6 +25,7 @@ targets = {
     "temp"   : ["temp.c",    '../libngxcore.a'],
     "version": ["version.c", '../libngxcore.a'],
     "parse"  : ["parse.c",   '../libngxcore.a'],
+    "array"  : ["array.c",   '../libngxcore.a'],
     }
 
 [ env.Program(target, targets[target]) for target in targets ]

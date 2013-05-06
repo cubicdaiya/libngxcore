@@ -4,6 +4,7 @@ examples/pool
 examples/temp
 examples/version
 examples/parse
+examples/array
 *.a
 GTAGS
 GRTAGS
