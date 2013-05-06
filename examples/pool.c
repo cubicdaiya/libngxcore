@@ -10,7 +10,7 @@ int main (int argc, char *argv[]) {
     ngx_pool_t *pool;
     size_t len;
 
-    pool = ngx_create_pool(4096, NULL);
+    pool = ngx_create_pool(NGX_DEFAULT_POOL_SIZE, NULL);
     len  = ngx_strlen(s.data);
 
     sp = ngx_palloc(pool, len + 1);

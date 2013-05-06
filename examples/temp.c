@@ -11,7 +11,7 @@ int main (int argc, char *argv[]) {
     ngx_temp_file_t *tf;
     ngx_path_t *path;
 
-    pool = ngx_create_pool(4096, NULL);
+    pool = ngx_create_pool(NGX_DEFAULT_POOL_SIZE, NULL);
 
     tf = ngx_pcalloc(pool, sizeof(ngx_temp_file_t));
     path = ngx_pcalloc(pool, sizeof(ngx_path_t));
@@ -22,7 +22,7 @@ int main (int argc, char *argv[]) {
     tf->path     = path;
     tf->pool     = pool;
 
-    ngx_create_temp_file(&tf->file, tf->path, pool, 1, 0, 0600);
+    ngx_create_temp_file(&tf->file, tf->path, tf->pool, 1, 0, 0600);
     ngx_close_file(tf->file.fd);
     printf("%s\n", tf->file.name.data);
 
