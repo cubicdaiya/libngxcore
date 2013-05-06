@@ -31,6 +31,7 @@ int main (int argc, char *argv[])
     }
 
     ngx_array_destroy(array);
+    ngx_destroy_pool(pool);
 
     return 0;
 }
