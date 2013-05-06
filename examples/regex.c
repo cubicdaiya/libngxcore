@@ -13,6 +13,8 @@ int main (int argc, char *argv[]) {
     u_char errstr[NGX_MAX_CONF_ERRSTR];
     u_char *define_pattern_s;
 
+    ngx_regex_init();
+
     ngx_memzero(&rgc, sizeof(ngx_regex_compile_t));
  
     pool = ngx_create_pool(NGX_DEFAULT_POOL_SIZE, NULL);
