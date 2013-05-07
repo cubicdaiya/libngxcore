@@ -33,7 +33,7 @@ Use examples as a reference about Building.
 ## Build libngxcore.a
 
 ```
-$ scons
+$ make
 ```
 
 ## Build examples

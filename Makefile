@@ -13,11 +13,12 @@ prepare_ngxcore:
 	cd work/nginx-${NGINX_VERSION} && ./configure --with-pcre --with-http_spdy_module --with-openssl=../openssl-${OPENSSL_VERSION}
 	cp -r work/nginx-${NGINX_VERSION}/objs/ngx_auto_config.h src/auto/
 	cp -r work/nginx-${NGINX_VERSION}/objs/ngx_auto_headers.h src/auto/
-	cp -r work/nginx-${NGINX_VERSION}/src/core/* src/core/
-	cp -r work/nginx-${NGINX_VERSION}/src/event/* src/event/
-	cp -r work/nginx-${NGINX_VERSION}/src/http/* src/http/
-	cp -r work/nginx-${NGINX_VERSION}/src/os/unix/* src/os/unix/
-	@echo "remove main function in src/core/nginx.c!"
+	# uncomment following when install latest version
+	# cp -r work/nginx-${NGINX_VERSION}/src/core/* src/core/
+	# cp -r work/nginx-${NGINX_VERSION}/src/event/* src/event/
+	# cp -r work/nginx-${NGINX_VERSION}/src/http/* src/http/
+	# cp -r work/nginx-${NGINX_VERSION}/src/os/unix/* src/os/unix/
+	# @echo "remove main function in src/core/nginx.c!"
 
 libngxcore.a: prepare_ngxcore
 	scons -j ${SCONS_JOBS}
