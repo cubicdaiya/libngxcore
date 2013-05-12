@@ -5,6 +5,9 @@ examples/temp
 examples/version
 examples/parse
 examples/array
+examples/md5
+examples/crc32
+examples/list
 *.a
 GTAGS
 GRTAGS

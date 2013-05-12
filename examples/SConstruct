@@ -26,6 +26,9 @@ targets = {
     "version": ["version.c", '../libngxcore.a'],
     "parse"  : ["parse.c",   '../libngxcore.a'],
     "array"  : ["array.c",   '../libngxcore.a'],
+    "md5"    : ["md5.c",     '../libngxcore.a'],
+    "crc32"  : ["crc32.c",   '../libngxcore.a'],
+    "list"   : ["list.c",    '../libngxcore.a'],
     }
 
 [ env.Program(target, targets[target]) for target in targets ]
