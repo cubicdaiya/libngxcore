@@ -5,7 +5,8 @@
 #include <ngx_palloc.h>
 #include <ngx_string.h>
 
-int main (int argc, char *argv[]) {
+int main (int argc, char *argv[])
+{
     ngx_str_t s = ngx_string("tmp");
     ngx_pool_t *pool;
     ngx_temp_file_t *tf;

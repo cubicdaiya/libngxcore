@@ -4,7 +4,8 @@
 #include <ngx_palloc.h>
 #include <ngx_string.h>
 
-int main (int argc, char *argv[]) {
+int main (int argc, char *argv[])
+{
     int rc, captures[(1 + 2) * 3];
     ngx_str_t unparsed_uri = ngx_string("small_light(p=medium)");
     ngx_str_t pattern = ngx_string("small_light\\(([^\\)]*)\\)");
