@@ -9,6 +9,7 @@ examples/md5
 examples/crc32
 examples/list
 examples/time
+examples/hash
 *.a
 GTAGS
 GRTAGS

@@ -30,6 +30,7 @@ targets = {
     "crc32"  : ["crc32.c"],
     "list"   : ["list.c"],
     "time"   : ["time.c"],
+    "hash"   : ["hash.c"],
     }
 [ targets[target].append('../libngxcore.a') for target in targets ]
 
