@@ -29,7 +29,7 @@ targets = {
     "md5"    : ["md5.c",     '../libngxcore.a'],
     "crc32"  : ["crc32.c",   '../libngxcore.a'],
     "list"   : ["list.c",    '../libngxcore.a'],
+    "time"   : ["time.c",    '../libngxcore.a'],
     }
 
 [ env.Program(target, targets[target]) for target in targets ]
-

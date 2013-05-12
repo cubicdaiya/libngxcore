@@ -8,6 +8,7 @@ examples/array
 examples/md5
 examples/crc32
 examples/list
+examples/time
 *.a
 GTAGS
 GRTAGS
