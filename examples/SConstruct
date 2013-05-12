@@ -19,17 +19,18 @@ env = Environment(
 )
 
 targets = {
-    "string" : ["string.c",  '../libngxcore.a'],
-    "regex"  : ["regex.c",   '../libngxcore.a'],
-    "pool"   : ["pool.c",    '../libngxcore.a'],
-    "temp"   : ["temp.c",    '../libngxcore.a'],
-    "version": ["version.c", '../libngxcore.a'],
-    "parse"  : ["parse.c",   '../libngxcore.a'],
-    "array"  : ["array.c",   '../libngxcore.a'],
-    "md5"    : ["md5.c",     '../libngxcore.a'],
-    "crc32"  : ["crc32.c",   '../libngxcore.a'],
-    "list"   : ["list.c",    '../libngxcore.a'],
-    "time"   : ["time.c",    '../libngxcore.a'],
+    "string" : ["string.c"],
+    "regex"  : ["regex.c"],
+    "pool"   : ["pool.c"],
+    "temp"   : ["temp.c"],
+    "version": ["version.c"],
+    "parse"  : ["parse.c"],
+    "array"  : ["array.c"],
+    "md5"    : ["md5.c"],
+    "crc32"  : ["crc32.c"],
+    "list"   : ["list.c"],
+    "time"   : ["time.c"],
     }
+[ targets[target].append('../libngxcore.a') for target in targets ]
 
 [ env.Program(target, targets[target]) for target in targets ]
