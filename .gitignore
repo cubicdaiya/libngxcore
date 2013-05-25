@@ -6,6 +6,7 @@ examples/version
 examples/parse
 examples/array
 examples/md5
+examples/sha1
 examples/crc32
 examples/list
 examples/time

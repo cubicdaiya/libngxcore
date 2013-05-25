@@ -27,6 +27,7 @@ targets = {
     "parse"  : ["parse.c"],
     "array"  : ["array.c"],
     "md5"    : ["md5.c"],
+    "sha1"   : ["sha1.c"],
     "crc32"  : ["crc32.c"],
     "list"   : ["list.c"],
     "time"   : ["time.c"],
