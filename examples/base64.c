@@ -6,7 +6,7 @@
 int main (int argc, char *argv[])
 {
     ngx_pool_t *pool;
-    ngx_str_t dst, src = ngx_string("cubicdaiyadfalasfahsdfuiyerfreuyfgiksafka");
+    ngx_str_t dst, src = ngx_string("cubicdaiya");
     u_char *encoded;
     size_t encoded_len;
 
