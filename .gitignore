@@ -8,6 +8,7 @@ examples/array
 examples/md5
 examples/sha1
 examples/crc32
+examples/base64
 examples/list
 examples/time
 examples/hash

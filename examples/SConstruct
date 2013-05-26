@@ -29,6 +29,7 @@ targets = {
     "md5"    : ["md5.c"],
     "sha1"   : ["sha1.c"],
     "crc32"  : ["crc32.c"],
+    "base64" : ["base64.c"],
     "list"   : ["list.c"],
     "time"   : ["time.c"],
     "hash"   : ["hash.c"],
