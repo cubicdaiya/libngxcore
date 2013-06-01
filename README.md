@@ -44,7 +44,7 @@ $ cd examples && scons
 
 ## Execute examples in Mac OS X
 
-When libngxcore is build in Mac OS X, libngxcore.dylib as not a static library but a shared library.
+When libngxcore is build in Mac OS X, libngxcore.dylib as not a static library but a shared library is generated.
 So set DYLD_LIBRARY_PATH when executing libngxcore examples.
 
 ```
