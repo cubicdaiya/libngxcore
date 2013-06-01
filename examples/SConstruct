@@ -1,5 +1,19 @@
 # -*- coding: utf-8 -*-
 
+import sys
+import re
+
+libs = [
+    'pthread',
+    'pcre',
+    'ssl',
+    'crypto',
+    'z',
+]
+
+if re.search(sys.platform, 'linux'):
+    libs.append('crypt')
+
 env = Environment(
     CPPPATH=['../src/core',
              '../src/auto',
@@ -9,13 +23,7 @@ env = Environment(
             '-Wall',
             #'-O2',
     ],
-    LIBS=[
-          'pthread',
-          'crypt',
-          'pcre',
-          'crypto',
-          'z',
-    ],
+    libs,
 )
 
 targets = {
@@ -34,6 +42,13 @@ targets = {
     "time"   : ["time.c"],
     "hash"   : ["hash.c"],
     }
-[ targets[target].append('../libngxcore.a') for target in targets ]
+
+if sys.platform == 'darwin':
+    [ targets[target].append('../libngxcore.dylib') for target in targets ]
+elif re.search(sys.platform, 'linux') != None:
+    [ targets[target].append('../libngxcore.a') for target in targets ]
+else:
+    print sys.platform + " is not supported"
+    sys.exit(1)
 
 [ env.Program(target, targets[target]) for target in targets ]
