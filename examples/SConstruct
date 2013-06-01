@@ -11,7 +11,7 @@ libs = [
     'z',
 ]
 
-if re.search(sys.platform, 'linux'):
+if re.search('linux', sys.platform) != None:
     libs.append('crypt')
 
 env = Environment(
@@ -23,7 +23,7 @@ env = Environment(
             '-Wall',
             #'-O2',
     ],
-    libs,
+    LIBS=libs,
 )
 
 targets = {
@@ -45,7 +45,7 @@ targets = {
 
 if sys.platform == 'darwin':
     [ targets[target].append('../libngxcore.dylib') for target in targets ]
-elif re.search(sys.platform, 'linux') != None:
+elif re.search('linux', sys.platform) != None:
     [ targets[target].append('../libngxcore.a') for target in targets ]
 else:
     print sys.platform + " is not supported"

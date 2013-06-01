@@ -21,5 +21,4 @@ GSYMS
 GPATH
 .sconsign.dblite
 work
-src/auto/ngx_auto_config.h
-src/auto/ngx_auto_headers.h
+src/auto/

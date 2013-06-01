@@ -78,7 +78,7 @@ if sys.platform == 'darwin':
     event_modules.append('src/event/modules/ngx_kqueue_module.c')
     systems.append('src/os/unix/ngx_darwin_init.c')
     systems.append('src/os/unix/ngx_darwin_sendfile_chain.c')
-elif re.search(sys.platform, 'linux') != None:
+elif re.search('linux', sys.platform) != None:
     event_modules.append('src/event/modules/ngx_epoll_module.c')
     systems.append('src/os/unix/ngx_linux_init.c')
     systems.append('src/os/unix/ngx_linux_sendfile_chain.c')
@@ -122,7 +122,7 @@ env = Environment(
 
 if sys.platform == 'darwin':
     env.SharedLibrary(target, src)
-elif re.search(sys.platform, 'linux') != None:
+elif re.search('linux', sys.platform) != None:
     env.StaticLibrary(target, src)
 else:
     print sys.platform + " is not supported"
