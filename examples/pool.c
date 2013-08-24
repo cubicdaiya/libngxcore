@@ -23,7 +23,7 @@ int main (int argc, char *argv[])
     ngx_cpystrn(sp, s.data, len + 1);
 
     printf("sp            :%s\n",  sp);
-    printf("ngx_strlen(sp):%ld\n", ngx_strlen(sp));
+    printf("ngx_strlen(sp):%zd\n", ngx_strlen(sp));
 
     ngx_destroy_pool(pool);
 
