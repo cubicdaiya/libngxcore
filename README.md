@@ -22,7 +22,7 @@ int main (int argc, char *argv[]) {
     ngx_str_t s = ngx_string("bokko");
 
     printf("s            :%s\n",  s.data);             // bokko
-    printf("ngx_strlen(s):%ld\n", ngx_strlen(s.data)); // 5
+    printf("ngx_strlen(s):%zd\n", ngx_strlen(s.data)); // 5
 
     return 0;
 }
