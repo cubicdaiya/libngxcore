@@ -1,6 +1,6 @@
 #libngxcore
 
-libngxcore is the library builded from nginx core APIs.
+libngxcore is the library built from nginx core APIs.
 
 ## Why is libngxcore needed?
 
