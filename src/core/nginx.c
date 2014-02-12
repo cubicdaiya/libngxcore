@@ -182,6 +182,7 @@ ngx_module_t  ngx_core_module = {
 
 ngx_uint_t          ngx_max_module;
 
+
 static char **ngx_os_environ;
 
 
