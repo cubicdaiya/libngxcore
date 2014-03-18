@@ -10,7 +10,7 @@ prepare_ngxcore:
 	mkdir work
 	cd work && wget http://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz && tar zxvf openssl-${OPENSSL_VERSION}.tar.gz
 	cd work && wget http://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz && tar zxvf nginx-${NGINX_VERSION}.tar.gz
-	cd work/nginx-${NGINX_VERSION} && ./configure --with-pcre --with-http_spdy_module --with-openssl=../openssl-${OPENSSL_VERSION}
+	cd work/nginx-${NGINX_VERSION} && ./configure --with-cc-opt="-Wno-deprecated-declarations -Wno-unused-parameter" --with-http_spdy_module --with-openssl=../openssl-${OPENSSL_VERSION}
 	cp -r work/nginx-${NGINX_VERSION}/objs/ngx_auto_config.h src/auto/
 	cp -r work/nginx-${NGINX_VERSION}/objs/ngx_auto_headers.h src/auto/
 	cp -r work/nginx-${NGINX_VERSION}/objs/ngx_modules.c src/auto/
