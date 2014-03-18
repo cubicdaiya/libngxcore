@@ -22,6 +22,8 @@ env = Environment(
     CFLAGS=['-g',
             '-Wall',
             #'-O2',
+            '-Wno-deprecated-declarations',
+            '-Wno-unused-parameter',
     ],
     LIBS=libs,
 )

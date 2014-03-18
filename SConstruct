@@ -103,6 +103,8 @@ env = Environment(
         '-g',
         #'-O2',
         '-Wall',
+        '-Wno-deprecated-declarations',
+        '-Wno-unused-parameter',
     ],
     CPPPATH=[
         'src/os/unix',
