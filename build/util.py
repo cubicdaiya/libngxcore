@@ -30,7 +30,7 @@ def buildLibNgxcore(env, target, src):
     elif isLinux():
         env.StaticLibrary(target, src)
 
-def appendEnvDependentSrc():
+def appendPlatformDependentSrc():
     if isMac():
         build.src.event_modules.append('src/event/modules/ngx_kqueue_module.c')
         build.src.systems.append('src/os/unix/ngx_darwin_init.c')

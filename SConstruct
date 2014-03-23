@@ -7,8 +7,8 @@ import build.util
 # check platform
 build.util.assertSupportPlatform()
 
-# append environment-dependent sources to build targets
-build.util.appendEnvDependentSrc()
+# append platform-dependent sources to build targets
+build.util.appendPlatformDependentSrc()
 
 src = [
     Glob('src/core/*.c'),
