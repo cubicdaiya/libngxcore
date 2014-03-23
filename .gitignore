@@ -15,6 +15,7 @@ examples/hash
 *.a
 *.os
 *.dylib
+*.pyc
 GTAGS
 GRTAGS
 GSYMS
