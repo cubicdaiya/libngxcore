@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sys
-
 http_modules = [
     'src/http/modules/ngx_http_log_module.c',
     'src/http/modules/ngx_http_static_module.c',
@@ -72,15 +70,3 @@ systems = [
     'src/os/unix/ngx_user.c',
     'src/os/unix/ngx_process_cycle.c',
 ]
-
-if sys.platform == 'darwin':
-    event_modules.append('src/event/modules/ngx_kqueue_module.c')
-    systems.append('src/os/unix/ngx_darwin_init.c')
-    systems.append('src/os/unix/ngx_darwin_sendfile_chain.c')
-elif re.search('linux', sys.platform) != None:
-    event_modules.append('src/event/modules/ngx_epoll_module.c')
-    systems.append('src/os/unix/ngx_linux_init.c')
-    systems.append('src/os/unix/ngx_linux_sendfile_chain.c')
-else:
-    print sys.platform + " is not supported"
-    sys.exit(1)

@@ -4,6 +4,12 @@ import build.config
 import build.src
 import build.util
 
+# check platform
+build.util.assertSupportPlatform()
+
+# append environment-dependent sources to build targets
+build.util.appendEnvDependentSrc()
+
 src = [
     Glob('src/core/*.c'),
     Glob('src/auto/*.c'),
