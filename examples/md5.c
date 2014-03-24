@@ -10,6 +10,8 @@ int main (int argc, char *argv[])
     u_char *p, md5_buf[16], md5_dump_buf[32];
     ngx_str_t s = ngx_string("bokko");
 
+    printf("%s:", s.data);
+
     ngx_md5_init(&md5);
     ngx_md5_update(&md5, s.data, s.len);
     ngx_md5_final(md5_buf, &md5);

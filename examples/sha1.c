@@ -10,6 +10,8 @@ int main (int argc, char *argv[])
     u_char *p, sha1_buf[20], sha1_dump_buf[40];
     ngx_str_t s = ngx_string("bokko");
 
+    printf("%s:", s.data);
+
     ngx_memzero(sha1_buf,      20);
     ngx_memzero(sha1_dump_buf, 40);
 

@@ -18,6 +18,8 @@ int main (int argc, char *argv[])
     printf("http   time      :%s\n", http_buf);
     printf("cookie time      :%s\n", cookie_buf);
 
+    printf("\n\nWait 10sec...\n\n");
+
     sleep(10);
     ngx_time_update();
     now = ngx_time();
