@@ -22,4 +22,7 @@ GSYMS
 GPATH
 .sconsign.dblite
 work
-src/auto/
+src/auto/ngx_auto_config.h
+src/auto/ngx_auto_headers.h
+src/auto/ngx_modules.c
+src/auto/ngx_modules.o
