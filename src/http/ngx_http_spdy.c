@@ -937,13 +937,34 @@ ngx_http_spdy_state_syn_stream(ngx_http_spdy_connection_t *sc, u_char *pos,
     ngx_log_debug2(NGX_LOG_DEBUG_HTTP, sc->connection->log, 0,
                    "spdy SYN_STREAM frame sid:%ui prio:%ui", sid, prio);
 
+    if (sid % 2 == 0 || sid <= sc->last_sid) {
+        ngx_log_error(NGX_LOG_INFO, sc->connection->log, 0,
+                      "client sent SYN_STREAM frame "
+                      "with invalid Stream-ID %ui", sid);
+
+        stream = ngx_http_spdy_get_stream_by_id(sc, sid);
+
+        if (stream) {
+            if (ngx_http_spdy_terminate_stream(sc, stream,
+                                               NGX_SPDY_PROTOCOL_ERROR)
+                != NGX_OK)
+            {
+                return ngx_http_spdy_state_internal_error(sc);
+            }
+        }
+
+        return ngx_http_spdy_state_protocol_error(sc);
+    }
+
+    sc->last_sid = sid;
+
     sscf = ngx_http_get_module_srv_conf(sc->http_connection->conf_ctx,
                                         ngx_http_spdy_module);
 
     if (sc->processing >= sscf->concurrent_streams) {
 
         ngx_log_error(NGX_LOG_INFO, sc->connection->log, 0,
-                      "spdy concurrent streams excessed %ui", sc->processing);
+                      "spdy concurrent streams exceeded %ui", sc->processing);
 
         if (ngx_http_spdy_send_rst_stream(sc, sid, NGX_SPDY_REFUSED_STREAM,
                                           prio)
@@ -967,8 +988,6 @@ ngx_http_spdy_state_syn_stream(ngx_http_spdy_connection_t *sc, u_char *pos,
                                       + sc->length;
 
     sc->stream = stream;
-
-    sc->last_sid = sid;
 
     return ngx_http_spdy_state_headers(sc, pos, end);
 }
@@ -1322,16 +1341,8 @@ ngx_http_spdy_state_window_update(ngx_http_spdy_connection_t *sc, u_char *pos,
         stream = ngx_http_spdy_get_stream_by_id(sc, sid);
 
         if (stream == NULL) {
-            ngx_log_error(NGX_LOG_INFO, sc->connection->log, 0,
-                          "client sent WINDOW_UPDATE frame "
-                          "for unknown stream %ui", sid);
-
-            if (ngx_http_spdy_send_rst_stream(sc, sid, NGX_SPDY_INVALID_STREAM,
-                                              NGX_SPDY_LOWEST_PRIORITY)
-                == NGX_ERROR)
-            {
-                return ngx_http_spdy_state_internal_error(sc);
-            }
+            ngx_log_debug0(NGX_LOG_DEBUG_HTTP, sc->connection->log, 0,
+                           "unknown spdy stream");
 
             return ngx_http_spdy_state_complete(sc, pos, end);
         }
@@ -1412,8 +1423,6 @@ ngx_http_spdy_state_data(ngx_http_spdy_connection_t *sc, u_char *pos,
 {
     ngx_http_spdy_stream_t  *stream;
 
-    stream = sc->stream;
-
     ngx_log_debug0(NGX_LOG_DEBUG_HTTP, sc->connection->log, 0,
                    "spdy DATA frame");
 
@@ -1421,7 +1430,7 @@ ngx_http_spdy_state_data(ngx_http_spdy_connection_t *sc, u_char *pos,
         ngx_log_error(NGX_LOG_INFO, sc->connection->log, 0,
                       "client violated connection flow control: length of "
                       "received DATA frame %uz, while available window %uz",
-                      stream->id, sc->length, sc->recv_window);
+                      sc->length, sc->recv_window);
 
         return ngx_http_spdy_state_protocol_error(sc);
     }
@@ -1440,6 +1449,8 @@ ngx_http_spdy_state_data(ngx_http_spdy_connection_t *sc, u_char *pos,
 
         sc->recv_window = NGX_SPDY_MAX_WINDOW;
     }
+
+    stream = sc->stream;
 
     if (stream == NULL) {
         return ngx_http_spdy_state_skip(sc, pos, end);
