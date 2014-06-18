@@ -32,6 +32,7 @@ http_modules = [
     'src/http/modules/ngx_http_headers_filter_module.c',
     'src/http/modules/ngx_http_not_modified_filter_module.c',
     'src/http/modules/ngx_http_range_filter_module.c',
+    'src/http/modules/ngx_http_upstream_hash_module.c',
 ]
 
 event_modules = [
