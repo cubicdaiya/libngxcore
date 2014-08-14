@@ -19,6 +19,10 @@ int main (int argc, char *argv[])
     ngx_memzero(&rgc, sizeof(ngx_regex_compile_t));
  
     pool = ngx_create_pool(NGX_DEFAULT_POOL_SIZE, NULL);
+    if (pool == NULL) {
+        perror("ngx_create_pool() failed.");
+        return 1;
+    }
 
     printf("string:%s\n", pattern.data);
 
@@ -30,7 +34,7 @@ int main (int argc, char *argv[])
     if (ngx_regex_compile(&rgc) != NGX_OK) {
         ngx_destroy_pool(pool);
         printf("not matched\n");
-        return NGX_ERROR;
+        return 1;
     }
 
     rc = ngx_regex_exec(rgc.regex, &unparsed_uri, captures, (1 + 2) * 3);
@@ -42,15 +46,16 @@ int main (int argc, char *argv[])
         define_pattern_s  = ngx_pcalloc(pool, capture_len + 1);
         if (define_pattern_s == NULL) {
             ngx_destroy_pool(pool);
-            return NGX_ERROR;
+            return 1;
         }
         ngx_cpystrn(define_pattern_s, unparsed_uri.data + capture_start, capture_len + 1);
         printf("matched:%s\n", define_pattern_s);
     } else {
         ngx_destroy_pool(pool);
-        return NGX_ERROR;
+        return 1;
     }
 
     ngx_destroy_pool(pool);
+
     return 0;
 }

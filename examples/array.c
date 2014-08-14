@@ -11,11 +11,20 @@ int main (int argc, char *argv[])
 
     c     = sizeof(a) / sizeof(int);
     pool  = ngx_create_pool(NGX_DEFAULT_POOL_SIZE, NULL);
+    if (pool == NULL) {
+        perror("ngx_create_pool() failed.");
+        return 1;
+    }
     array = ngx_array_create(pool, c, sizeof(int));
+    if (array == NULL) {
+        perror("ngx_array_create() failed.");
+        return 1;
+    }
 
     for (i=0;i<c;i++) {
         p = ngx_array_push(array);
         if (p == NULL) {
+            perror("ngx_array_create() failed.");
             return 1;
         }
         *p = a[i];

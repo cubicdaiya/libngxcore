@@ -14,10 +14,22 @@ int main (int argc, char *argv[])
 
     c    = sizeof(a) / sizeof(int);
     pool = ngx_create_pool(NGX_DEFAULT_POOL_SIZE, NULL);
+    if (pool == NULL) {
+        perror("ngx_create_pool() failed.");
+        return 1;
+    }
     list = ngx_list_create(pool, 10, sizeof(int));
+    if (list == NULL) {
+        perror("ngx_list_create() failed.");
+        return 1;
+    }
 
     for (i=0;i<c;i++) {
         p  = ngx_list_push(list);
+        if (list == NULL) {
+            perror("ngx_list_push() failed.");
+            return 1;
+        }
         *p = a[i];
     }
 

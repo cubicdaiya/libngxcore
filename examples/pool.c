@@ -12,12 +12,16 @@ int main (int argc, char *argv[])
     size_t len;
 
     pool = ngx_create_pool(NGX_DEFAULT_POOL_SIZE, NULL);
-    len  = ngx_strlen(s.data);
+    if (pool == NULL) {
+        perror("ngx_create_pool() failed.");
+        return 1;
+    }
+    len = ngx_strlen(s.data);
 
     sp = ngx_palloc(pool, len + 1);
     if (sp == NULL) {
-        printf("alloc failed\n");
-        return NGX_ERROR;
+        perror("ngx_palloc() failed.");
+        return 1;
     }
 
     ngx_cpystrn(sp, s.data, len + 1);
