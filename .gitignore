@@ -12,6 +12,7 @@ examples/base64
 examples/list
 examples/time
 examples/hash
+test/test_libngxcore
 *.a
 *.os
 *.dylib
