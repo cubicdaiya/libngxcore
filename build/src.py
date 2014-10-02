@@ -44,7 +44,6 @@ events = [
     'src/event/ngx_event_busy_lock.c',
     'src/event/ngx_event.c',
     'src/event/ngx_event_connect.c',
-    'src/event/ngx_event_mutex.c',
     'src/event/ngx_event_pipe.c',
     'src/event/ngx_event_posted.c',
     'src/event/ngx_event_timer.c',

@@ -417,7 +417,7 @@ ngx_resolve_name_done(ngx_resolver_ctx_t *ctx)
 
     /* lock name mutex */
 
-    if (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
+    if (ctx->state == NGX_AGAIN) {
 
         hash = ngx_crc32_short(ctx->name.data, ctx->name.len);
 
@@ -664,7 +664,7 @@ ngx_resolve_name_locked(ngx_resolver_t *r, ngx_resolver_ctx_t *ctx)
         }
 
         ctx->event->handler = ngx_resolver_timeout_handler;
-        ctx->event->data = ctx;
+        ctx->event->data = rn;
         ctx->event->log = r->log;
         ctx->ident = -1;
 
@@ -857,7 +857,7 @@ ngx_resolve_addr(ngx_resolver_ctx_t *ctx)
     }
 
     ctx->event->handler = ngx_resolver_timeout_handler;
-    ctx->event->data = ctx;
+    ctx->event->data = rn;
     ctx->event->log = r->log;
     ctx->ident = -1;
 
@@ -949,7 +949,7 @@ ngx_resolve_addr_done(ngx_resolver_ctx_t *ctx)
 
     /* lock addr mutex */
 
-    if (ctx->state == NGX_AGAIN || ctx->state == NGX_RESOLVE_TIMEDOUT) {
+    if (ctx->state == NGX_AGAIN) {
 
         switch (ctx->addr.sockaddr->sa_family) {
 
@@ -2790,13 +2790,21 @@ done:
 static void
 ngx_resolver_timeout_handler(ngx_event_t *ev)
 {
-    ngx_resolver_ctx_t  *ctx;
+    ngx_resolver_ctx_t   *ctx, *next;
+    ngx_resolver_node_t  *rn;
 
-    ctx = ev->data;
+    rn = ev->data;
+    ctx = rn->waiting;
+    rn->waiting = NULL;
 
-    ctx->state = NGX_RESOLVE_TIMEDOUT;
+    do {
+        ctx->state = NGX_RESOLVE_TIMEDOUT;
+        next = ctx->next;
 
-    ctx->handler(ctx);
+        ctx->handler(ctx);
+
+        ctx = next;
+    } while (ctx);
 }
 
 
@@ -3073,17 +3081,6 @@ ngx_udp_connect(ngx_udp_connection_t *uc)
     uc->connection = c;
 
     c->number = ngx_atomic_fetch_add(ngx_connection_counter, 1);
-
-#if (NGX_THREADS)
-
-    /* TODO: lock event when call completion handler */
-
-    rev->lock = &c->lock;
-    wev->lock = &c->lock;
-    rev->own_lock = &c->lock;
-    wev->own_lock = &c->lock;
-
-#endif
 
     ngx_log_debug3(NGX_LOG_DEBUG_EVENT, &uc->log, 0,
                    "connect to %V, fd:%d #%uA", &uc->server, s, c->number);
