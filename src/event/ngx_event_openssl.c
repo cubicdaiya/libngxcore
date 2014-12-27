@@ -376,6 +376,67 @@ ngx_ssl_certificate(ngx_conf_t *cf, ngx_ssl_t *ssl, ngx_str_t *cert,
 
     BIO_free(bio);
 
+    if (ngx_strncmp(key->data, "engine:", sizeof("engine:") - 1) == 0) {
+
+#ifndef OPENSSL_NO_ENGINE
+
+        u_char      *p, *last;
+        ENGINE      *engine;
+        EVP_PKEY    *pkey;
+
+        p = key->data + sizeof("engine:") - 1;
+        last = (u_char *) ngx_strchr(p, ':');
+
+        if (last == NULL) {
+            ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                               "invalid syntax in \"%V\"", key);
+            return NGX_ERROR;
+        }
+
+        *last = '\0';
+
+        engine = ENGINE_by_id((char *) p);
+
+        if (engine == NULL) {
+            ngx_ssl_error(NGX_LOG_EMERG, ssl->log, 0,
+                          "ENGINE_by_id(\"%s\") failed", p);
+            return NGX_ERROR;
+        }
+
+        *last++ = ':';
+
+        pkey = ENGINE_load_private_key(engine, (char *) last, 0, 0);
+
+        if (pkey == NULL) {
+            ngx_ssl_error(NGX_LOG_EMERG, ssl->log, 0,
+                          "ENGINE_load_private_key(\"%s\") failed", last);
+            ENGINE_free(engine);
+            return NGX_ERROR;
+        }
+
+        ENGINE_free(engine);
+
+        if (SSL_CTX_use_PrivateKey(ssl->ctx, pkey) == 0) {
+            ngx_ssl_error(NGX_LOG_EMERG, ssl->log, 0,
+                          "SSL_CTX_use_PrivateKey(\"%s\") failed", last);
+            EVP_PKEY_free(pkey);
+            return NGX_ERROR;
+        }
+
+        EVP_PKEY_free(pkey);
+
+        return NGX_OK;
+
+#else
+
+        ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
+                           "loading \"engine:...\" certificate keys "
+                           "is not supported");
+        return NGX_ERROR;
+
+#endif
+    }
+
     if (ngx_conf_full_name(cf->cycle, key, 1) != NGX_OK) {
         return NGX_ERROR;
     }
@@ -404,20 +465,9 @@ ngx_ssl_certificate(ngx_conf_t *cf, ngx_ssl_t *ssl, ngx_str_t *cert,
         }
 
         if (--tries) {
-            n = ERR_peek_error();
-
-#ifdef OPENSSL_IS_BORINGSSL
-            if (ERR_GET_LIB(n) == ERR_LIB_CIPHER
-                && ERR_GET_REASON(n) == CIPHER_R_BAD_DECRYPT)
-#else
-            if (ERR_GET_LIB(n) == ERR_LIB_EVP
-                && ERR_GET_REASON(n) == EVP_R_BAD_DECRYPT)
-#endif
-            {
-                ERR_clear_error();
-                SSL_CTX_set_default_passwd_cb_userdata(ssl->ctx, ++pwd);
-                continue;
-            }
+            ERR_clear_error();
+            SSL_CTX_set_default_passwd_cb_userdata(ssl->ctx, ++pwd);
+            continue;
         }
 
         ngx_ssl_error(NGX_LOG_EMERG, ssl->log, 0,
@@ -1096,10 +1146,14 @@ ngx_ssl_handshake(ngx_connection_t *c)
         c->recv_chain = ngx_ssl_recv_chain;
         c->send_chain = ngx_ssl_send_chain;
 
+#ifdef SSL3_FLAGS_NO_RENEGOTIATE_CIPHERS
+
         /* initial handshake done, disable renegotiation (CVE-2009-3555) */
         if (c->ssl->connection->s3) {
             c->ssl->connection->s3->flags |= SSL3_FLAGS_NO_RENEGOTIATE_CIPHERS;
         }
+
+#endif
 
         return NGX_OK;
     }
@@ -1185,10 +1239,10 @@ ngx_ssl_handshake_handler(ngx_event_t *ev)
 
 
 ssize_t
-ngx_ssl_recv_chain(ngx_connection_t *c, ngx_chain_t *cl)
+ngx_ssl_recv_chain(ngx_connection_t *c, ngx_chain_t *cl, off_t limit)
 {
     u_char     *last;
-    ssize_t     n, bytes;
+    ssize_t     n, bytes, size;
     ngx_buf_t  *b;
 
     bytes = 0;
@@ -1197,8 +1251,19 @@ ngx_ssl_recv_chain(ngx_connection_t *c, ngx_chain_t *cl)
     last = b->last;
 
     for ( ;; ) {
+        size = b->end - last;
 
-        n = ngx_ssl_recv(c, last, b->end - last);
+        if (limit) {
+            if (bytes >= limit) {
+                return bytes;
+            }
+
+            if (bytes + size > limit) {
+                size = (ssize_t) (limit - bytes);
+            }
+        }
+
+        n = ngx_ssl_recv(c, last, size);
 
         if (n > 0) {
             last += n;
@@ -1857,6 +1922,9 @@ ngx_ssl_connection_error(ngx_connection_t *c, int sslerr, ngx_err_t err,
 #endif
 #ifdef SSL_R_SCSV_RECEIVED_WHEN_RENEGOTIATING
             || n == SSL_R_SCSV_RECEIVED_WHEN_RENEGOTIATING           /*  345 */
+#endif
+#ifdef SSL_R_INAPPROPRIATE_FALLBACK
+            || n == SSL_R_INAPPROPRIATE_FALLBACK                     /*  373 */
 #endif
             || n == 1000 /* SSL_R_SSLV3_ALERT_CLOSE_NOTIFY */
             || n == SSL_R_SSLV3_ALERT_UNEXPECTED_MESSAGE             /* 1010 */

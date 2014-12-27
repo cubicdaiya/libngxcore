@@ -152,7 +152,7 @@ static ngx_int_t ngx_http_log_init(ngx_conf_t *cf);
 static ngx_command_t  ngx_http_log_commands[] = {
 
     { ngx_string("log_format"),
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_2MORE,
+      NGX_HTTP_MAIN_CONF|NGX_CONF_2MORE,
       ngx_http_log_set_format,
       NGX_HTTP_MAIN_CONF_OFFSET,
       0,
@@ -744,10 +744,23 @@ ngx_http_log_flush(ngx_open_file_t *file, ngx_log_t *log)
 static void
 ngx_http_log_flush_handler(ngx_event_t *ev)
 {
+    ngx_open_file_t     *file;
+    ngx_http_log_buf_t  *buffer;
+
     ngx_log_debug0(NGX_LOG_DEBUG_EVENT, ev->log, 0,
                    "http log buffer flush handler");
 
-    ngx_http_log_flush(ev->data, ev->log);
+    if (ev->timedout) {
+        ngx_http_log_flush(ev->data, ev->log);
+        return;
+    }
+
+    /* cancel the flush timer for graceful shutdown */
+
+    file = ev->data;
+    buffer = file->data;
+
+    buffer->event = NULL;
 }
 
 
@@ -1411,6 +1424,7 @@ process_formats:
             buffer->event->data = log->file;
             buffer->event->handler = ngx_http_log_flush_handler;
             buffer->event->log = &cf->cycle->new_log;
+            buffer->event->cancelable = 1;
 
             buffer->flush = flush;
         }
@@ -1433,12 +1447,6 @@ ngx_http_log_set_format(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     ngx_str_t           *value;
     ngx_uint_t           i;
     ngx_http_log_fmt_t  *fmt;
-
-    if (cf->cmd_type != NGX_HTTP_MAIN_CONF) {
-        ngx_conf_log_error(NGX_LOG_WARN, cf, 0,
-                           "the \"log_format\" directive may be used "
-                           "only on \"http\" level");
-    }
 
     value = cf->args->elts;
 
